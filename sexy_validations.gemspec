@@ -16,11 +16,40 @@ Gem::Specification.new do |s|
     "LICENSE",
      "README.rdoc"
   ]
+  s.files = [
+    ".document",
+     ".gitignore",
+     "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION",
+     "lib/sexy_validations.rb",
+     "lib/sexy_validations/validators/acceptance.rb",
+     "lib/sexy_validations/validators/age.rb",
+     "lib/sexy_validations/validators/confirmation.rb",
+     "lib/sexy_validations/validators/count.rb",
+     "lib/sexy_validations/validators/email.rb",
+     "lib/sexy_validations/validators/file.rb",
+     "lib/sexy_validations/validators/format.rb",
+     "lib/sexy_validations/validators/image.rb",
+     "lib/sexy_validations/validators/inclusion.rb",
+     "lib/sexy_validations/validators/length.rb",
+     "lib/sexy_validations/validators/password.rb",
+     "lib/sexy_validations/validators/presence.rb",
+     "sexy_validations.gemspec",
+     "spec/sequel_sexy_validations_spec.rb",
+     "spec/spec.opts",
+     "spec/spec_helper.rb"
+  ]
   s.homepage = %q{http://github.com/gucki/sexy_validations}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Sexy validations for Models}
+  s.test_files = [
+    "spec/spec_helper.rb",
+     "spec/sequel_sexy_validations_spec.rb"
+  ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
