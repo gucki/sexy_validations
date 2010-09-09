@@ -16,8 +16,6 @@ Or when using bundler, add it got your Gemfile:
 
   gem sexy_validations
 
-This should also install the geokit gem.
-
 ==Quick Start
 
 In your model:
@@ -26,8 +24,7 @@ In your model:
     include SexyValidations
 
     validates :name, :presence => true, :length => 2..20
-    validates :desfription, :length => 0..2000
-    validates :photo, :image => "250x250" # see the sequel_paperclip gem
+    validates :description, :length => 0..2000
 
     def valid?
       validate!
@@ -36,7 +33,7 @@ In your model:
   end
 
 
-==Sequel specific validations
+==Additional sequel specific validators
 
 Please have a look at my sequel_sexy_validations gem (depends on this one). 
 This gem contains extra validators like Uniqueness.
