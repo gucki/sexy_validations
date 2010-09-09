@@ -32,6 +32,27 @@ In your model:
     end
   end
 
+You can also pass a symbol, which will be used a a method name:
+
+  class User
+    validates :special
+
+    def special_validation
+      if 5 > 9
+        errors.add(:boah, "ruby seems to be buggy....")
+      end
+    end
+  end
+
+And even a block is accepted
+
+  class User
+    validates do
+      if 5 > 9
+        errors.add(:boah, "ruby seems to be buggy....")
+      end
+    end
+  end
 
 ==Additional sequel specific validators
 
