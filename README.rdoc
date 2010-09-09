@@ -35,6 +35,12 @@ In your model:
     end
   end
 
+
+==Sequel specific validations
+
+Please have a look at my sequel_sexy_validations gem (depends on this one). 
+This gem contains extra validators like Uniqueness.
+
 ==Todo
 
 * Use I18n for messages
