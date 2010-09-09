@@ -23,11 +23,16 @@ This should also install the geokit gem.
 In your model:
 
   class User
-    plugin :sexy_validations
+    include SexyValidations
 
     validates :name, :presence => true, :length => 2..20
     validates :desfription, :length => 0..2000
     validates :photo, :image => "250x250" # see the sequel_paperclip gem
+
+    def valid?
+      validate!
+      errors.empty?
+    end
   end
 
 ==Todo
