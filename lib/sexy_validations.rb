@@ -1,17 +1,34 @@
+require 'sexy_validations/errors'
+
 module SexyValidations
   def self.included(klass)
     klass.instance_eval do
-      klass.class_inheritable_array :validations
-      klass.validations = []
+      class_inheritable_array :validations
+      self.validations = []
 
       extend  ClassMethods
       include InstanceMethods
+
+      unless method_defined?(:errors)
+        class_eval do
+          def errors
+            @errors ||= Errors.new
+          end
+        end
+      end
+
+      unless method_defined?(:valid?)
+        class_eval do
+          def valid?
+            validate!
+            errors.empty?
+          end
+        end
+      end
     end
   end
 
   module ClassMethods
-    attr_accessor :errors
-
     def load_validator(name)
       require "sexy_validations/validators/#{name}"
       "SexyValidations::Validators::#{name.to_s.capitalize}".constantize
