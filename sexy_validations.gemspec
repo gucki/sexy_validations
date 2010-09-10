@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Corin Langosch"]
-  s.date = %q{2010-09-09}
+  s.date = %q{2010-09-10}
   s.description = %q{Module which provides sexy validations for models.}
   s.email = %q{info@netskin.com}
   s.extra_rdoc_files = [
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/sexy_validations.rb",
+     "lib/sexy_validations/errors.rb",
      "lib/sexy_validations/validators/acceptance.rb",
      "lib/sexy_validations/validators/age.rb",
      "lib/sexy_validations/validators/confirmation.rb",
