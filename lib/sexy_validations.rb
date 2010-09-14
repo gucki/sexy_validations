@@ -36,12 +36,24 @@ module SexyValidations
 
     def validates(attribute = nil, validations = nil, &block)
       if validations
+        condition = nil
+
+        if validations[:if]
+          condition = validations.delete(:if)
+        end
+
+        if validations[:unless]
+          ref = validations.delete(:unless)
+          condition = lambda { |model| !ref.call(model) }
+        end
+
         validations.each_pair do |validator, options|
           klass = load_validator(validator)
           self.validations << {
             :attribute => attribute,
             :validator => klass,
             :options => options,
+            :condition => condition,
           }
         end
       else
@@ -64,6 +76,9 @@ module SexyValidations
       validations.each do |validation|
         valid = case
           when validation[:validator]
+            if validation[:condition]
+              next unless validation[:condition].call(self) 
+            end
             if errors[validation[:attribute]].empty?
               validation[:validator].validate(self, validation[:attribute], send(validation[:attribute]), validation[:options])
             end
