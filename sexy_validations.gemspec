@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sexy_validations}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Corin Langosch"]
@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
      "lib/sexy_validations/validators/age.rb",
      "lib/sexy_validations/validators/confirmation.rb",
      "lib/sexy_validations/validators/count.rb",
+     "lib/sexy_validations/validators/date.rb",
      "lib/sexy_validations/validators/email.rb",
      "lib/sexy_validations/validators/file.rb",
      "lib/sexy_validations/validators/format.rb",
