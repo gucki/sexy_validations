@@ -5,7 +5,7 @@ module SexyValidations
       def self.validate(record, attribute, value, options)
         return unless value
      
-        if value.is_a?(::Date)
+        if value.is_a?(::Date) || value.is_a?(::Time)
           if options.is_a?(Hash)
             min = options[:within].min
             if value < min

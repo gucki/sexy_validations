@@ -10,8 +10,8 @@ module SexyValidations
             :within => options,
           }
         end
-
-        if value.is_a?(::Date)
+        
+        if value.is_a?(::Date) || value.is_a?(::Time)
           min = options[:within].min
           if value.calc_age < min
             record.errors.add(attribute, "zu jung (mindestes #{min} Jahre)")
