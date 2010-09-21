@@ -1,6 +1,11 @@
 require 'sexy_validations/errors'
 
 module SexyValidations
+  def self.load_validator(name)
+    require "sexy_validations/validators/#{name}"
+    "SexyValidations::Validators::#{name.to_s.capitalize}".constantize
+  end
+
   def self.included(klass)
     klass.instance_eval do
       class_inheritable_array :validations
@@ -30,10 +35,9 @@ module SexyValidations
 
   module ClassMethods
     def load_validator(name)
-      require "sexy_validations/validators/#{name}"
-      "SexyValidations::Validators::#{name.to_s.capitalize}".constantize
+      SexyValidations.load_validator(name)
     end
-
+    
     def validates(attribute = nil, validations = nil, &block)
       if validations
         condition = nil
@@ -74,7 +78,7 @@ module SexyValidations
     def validate!
       errors.clear     
       validations.each do |validation|
-        valid = case
+        case
           when validation[:validator]
             if validation[:condition]
               next unless validation[:condition].call(self) 

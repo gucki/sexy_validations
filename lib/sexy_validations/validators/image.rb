@@ -11,13 +11,12 @@ module SexyValidations
           }
         end
 
-        unless value.is_a?(File) || value.is_a?(Tempfile)
-          raise ArgumentError, "#{value} is not a File"
-        end
+        file = SexyValidations.load_validator(:file).file_from_value(value)
+        return unless file
 
         if options[:geometry]
           geo1 = Sequel::Plugins::Paperclip::Processors::Image::Geometry.from_s(options[:geometry])
-          geo2 = Sequel::Plugins::Paperclip::Processors::Image::Geometry.from_file(value)
+          geo2 = Sequel::Plugins::Paperclip::Processors::Image::Geometry.from_file(file)
           if geo2
             if geo2.width < geo1.width
               model.errors.add(attribute, "zu klein (weniger als %d Pixel breit)"%[geo1.width])
