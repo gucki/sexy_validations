@@ -10,8 +10,15 @@ module SexyValidations
             :within => options,
           }
         end
+        
+        data = case options[:within]
+          when Proc
+            options[:within].call(model)
+          else
+            options[:within]
+        end
 
-        unless options[:within].include?(value)
+        unless data.include?(value)
           model.errors.add(attribute, options[:message] || "ungültige Auswahl")
         end
       end
