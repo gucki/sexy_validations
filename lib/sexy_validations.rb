@@ -39,18 +39,21 @@ module SexyValidations
     end
     
     def validates(attribute = nil, validations = nil, &block)
-      if validations
-        condition = nil
+      condition = nil
 
+      if validations
         if validations[:if]
           condition = validations.delete(:if)
         end
 
         if validations[:unless]
+          raise ArgumentError, "if and unless condition given" if condition
           ref = validations.delete(:unless)
           condition = lambda { |model| !ref.call(model) }
         end
+      end
 
+      unless validations.blank?
         validations.each_pair do |validator, options|
           klass = load_validator(validator)
           self.validations << {
@@ -64,10 +67,13 @@ module SexyValidations
         if attribute
           self.validations << {
             :method => "#{attribute}_validation",
+            :condition => condition,
           }
         else
+          raise ArgumentError, "at least a block has to be given" unless block_given?
           self.validations << {
             :block => block,
+            :condition => condition,
           }
         end
       end
@@ -78,11 +84,12 @@ module SexyValidations
     def validate!
       errors.clear     
       validations.each do |validation|
+        if validation[:condition]
+          next unless validation[:condition].call(self) 
+        end
+
         case
           when validation[:validator]
-            if validation[:condition]
-              next unless validation[:condition].call(self) 
-            end
             if errors[validation[:attribute]].empty?
               validation[:validator].validate(self, validation[:attribute], send(validation[:attribute]), validation[:options])
             end
