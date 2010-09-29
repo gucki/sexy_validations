@@ -39,18 +39,22 @@ module SexyValidations
     end
     
     def validates(attribute = nil, validations = nil, &block)
-      condition = nil
+      conditions = nil
+      conditions_if = nil
 
       if validations
         if validations[:if]
-          condition = validations.delete(:if)
+          conditions = validations.delete(:if)
+          conditions_if = true
         end
 
         if validations[:unless]
-          raise ArgumentError, "if and unless condition given" if condition
-          ref = validations.delete(:unless)
-          condition = lambda { |model| !ref.call(model) }
+          raise ArgumentError, "if and unless conditions given" if condition
+          conditions = validations.delete(:unless)
+          conditions_if = false
         end
+        
+        conditions = [conditions] if conditions && !conditions.is_a?(Array)
       end
 
       unless validations.blank?
@@ -60,20 +64,23 @@ module SexyValidations
             :attribute => attribute,
             :validator => klass,
             :options => options,
-            :condition => condition,
+            :conditions => conditions,
+            :conditions_if => conditions_if,
           }
         end
       else
         if attribute
           self.validations << {
             :method => "#{attribute}_validation",
-            :condition => condition,
+            :conditions => conditions,
+            :conditions_if => conditions_if,
           }
         else
           raise ArgumentError, "at least a block has to be given" unless block_given?
           self.validations << {
             :block => block,
-            :condition => condition,
+            :conditions => conditions,
+            :conditions_if => conditions_if,
           }
         end
       end
@@ -84,21 +91,30 @@ module SexyValidations
     def validate!
       errors.clear     
       validations.each do |validation|
-        if validation[:condition]
-          next unless validation[:condition].call(self) 
-        end
-
-        case
-          when validation[:validator]
-            if errors[validation[:attribute]].empty?
-              validation[:validator].validate(self, validation[:attribute], send(validation[:attribute]), validation[:options])
+        catch (:skip_validation) do
+          if validation[:conditions]
+            validation[:conditions].each do |condition|
+              success = condition.call(self, validation[:attribute])
+              if validation[:conditions_if] 
+                throw :skip_validation unless success
+              else
+                throw :skip_validation if success
+              end
             end
-          when validation[:method]
-            send(validation[:method])
-          when validation[:block]
-            validation[:block].call
-          else
-            raise ArgumentError, "invalid validation (internal error)"
+          end
+
+          case
+            when validation[:validator]
+              if errors[validation[:attribute]].empty?
+                validation[:validator].validate(self, validation[:attribute], send(validation[:attribute]), validation[:options])
+              end
+            when validation[:method]
+              send(validation[:method])
+            when validation[:block]
+              validation[:block].call
+            else
+              raise ArgumentError, "invalid validation (internal error)"
+          end
         end
       end
     end
