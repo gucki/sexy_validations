@@ -3,7 +3,9 @@ require 'sexy_validations/errors'
 module SexyValidations
   def self.load_validator(name)
     require "sexy_validations/validators/#{name}"
-    "SexyValidations::Validators::#{name.to_s.capitalize}".constantize
+    "SexyValidations::Validators::#{name.to_s.camelize}".constantize
+  rescue LoadError
+    "::#{name.to_s.camelize}Validator".constantize
   end
 
   def self.included(klass)
