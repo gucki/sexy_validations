@@ -3,7 +3,7 @@ module SexyValidations
   module Validators
     class Format
       def self.validate(model, attribute, value, options)
-        return unless value
+        return if value.blank?
 
         unless options.is_a?(Hash)
           options = {

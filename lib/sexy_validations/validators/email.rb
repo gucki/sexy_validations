@@ -5,7 +5,7 @@ module SexyValidations
       REGEXP = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
 
       def self.validate(record, attribute, value, options)
-        return unless value
+        return if value.blank?
 
         unless value =~ REGEXP
           record.errors.add(attribute, "ungültiges Format")
