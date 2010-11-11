@@ -11,7 +11,7 @@ module SexyValidations
           }
         end
 
-        unless value =~ options[:with]
+        unless value.to_s =~ options[:with]
           model.errors.add(attribute, options[:message] || "ungültiges Format")
         end
       end
