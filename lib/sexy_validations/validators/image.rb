@@ -14,7 +14,7 @@ module SexyValidations
         file = SexyValidations.load_validator(:file).file_from_value(value)
         return unless file
 
-        if options[:geometry]
+        if options[:geometry].is_a?(String)
           geo1 = Sequel::Plugins::Paperclip::Processors::Image::Geometry.from_s(options[:geometry])
           geo2 = Sequel::Plugins::Paperclip::Processors::Image::Geometry.from_file(file)
           if geo2
