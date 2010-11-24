@@ -10,7 +10,7 @@ module SexyValidations
 
   def self.included(klass)
     klass.instance_eval do
-      class_inheritable_array :validations
+      class_attribute :validations
       self.validations = []
 
       extend  ClassMethods
@@ -62,7 +62,7 @@ module SexyValidations
       unless validations.blank?
         validations.each_pair do |validator, options|
           klass = load_validator(validator)
-          self.validations << {
+          self.validations += {
             :attribute => attribute,
             :validator => klass,
             :options => options,
@@ -72,14 +72,14 @@ module SexyValidations
         end
       else
         if attribute
-          self.validations << {
+          self.validations += {
             :method => "#{attribute}_validation",
             :conditions => conditions,
             :conditions_if => conditions_if,
           }
         else
           raise ArgumentError, "at least a block has to be given" unless block_given?
-          self.validations << {
+          self.validations += {
             :block => block,
             :conditions => conditions,
             :conditions_if => conditions_if,
@@ -93,7 +93,7 @@ module SexyValidations
     def validate!
       errors.clear     
       validations.each do |validation|
-        catch (:skip_validation) do
+        catch(:skip_validation) do
           if validation[:conditions]
             validation[:conditions].each do |condition|
               success = condition.call(self, validation[:attribute])
