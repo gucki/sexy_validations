@@ -62,28 +62,28 @@ module SexyValidations
       unless validations.blank?
         validations.each_pair do |validator, options|
           klass = load_validator(validator)
-          self.validations += {
+          self.validations += [{
             :attribute => attribute,
             :validator => klass,
             :options => options,
             :conditions => conditions,
             :conditions_if => conditions_if,
-          }
+          }]
         end
       else
         if attribute
-          self.validations += {
+          self.validations += [{
             :method => "#{attribute}_validation",
             :conditions => conditions,
             :conditions_if => conditions_if,
-          }
+          }]
         else
           raise ArgumentError, "at least a block has to be given" unless block_given?
-          self.validations += {
+          self.validations += [{
             :block => block,
             :conditions => conditions,
             :conditions_if => conditions_if,
-          }
+          }]
         end
       end
     end
